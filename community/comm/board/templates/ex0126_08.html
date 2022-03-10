@@ -1,0 +1,105 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+    <title>Document</title>
+    <script>
+        $(function () {
+            $("#chartBtn").click(function () {
+               
+                $.ajax({
+                    url: "{% static 'income.json'%}",
+                    type: "get",
+                    data: {},
+                    dataType: "json",
+                    success: function (data) {
+                        chartLabels = [];
+                        chartData = [];
+                        alert("asd" + data);
+                        $.each(data,function(key,value){
+                           chartLabels.push(value.iyear);
+                           chartData.push(value.iincome);
+                        });
+                        shapeChartDate = {
+                            labels: chartLabels,
+                            datasets: [{
+                                label: '년도별 매출 그래프',
+                                data: chartData,
+                                backgroundColor: [
+                                    'rgba(255, 99, 1, 0.2)',
+                                    'rgba(153, 102, 255, 0.32, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(255, 206, 86, 0.2)',
+                                    'rgba(75, 192, 1922)',
+                                    'rgba(255, 159, 64, 0.2)'
+                                ],
+                                borderColor: [
+                                    'rgba(255, 99, 132, 1)',
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(255, 206, 86, 1)',
+                                    'rgba(75, 192, 192, 1)',
+                                    'rgba(153, 102, 255, 1)',
+                                    'rgba(255, 159, 64, 1)'
+                                ],
+                                borderWidth: 1
+                            }]
+                        }
+                        createChart();
+                    },
+                    error: function () {
+
+                    }
+
+                });
+
+
+            });
+        });
+        //차트 그리기
+        function createChart() {
+            const ctx = document.getElementById('myChart').getContext('2d');
+            const myChart = new Chart(ctx, {
+                type: 'bar',
+                data: shapeChartDate,
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+        }
+    </script>
+    <style>
+       
+    </style>
+</head>
+
+<body>
+    <div>
+        <h2>년도별 매출현황</h2>
+        <button id="chartBtn">매출액 가져오기</button>
+        <br>
+    </div>
+    <h3>매출그래프</h3>
+    <div id="grape">
+        <div  style="position: relative; height:600px; width:400px;">
+            <canvas id="myChart"  >
+                Your browser does not support the canvas element
+            </canvas>
+        </div>
+    </div>
+    <style>
+        
+    </style>
+</body>
+
+</html>
